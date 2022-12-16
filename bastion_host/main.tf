@@ -97,7 +97,57 @@ resource "aws_instance" "bastion-host" {
   security_groups             = [aws_security_group.bastion-sg.id]
   associate_public_ip_address = true
   key_name                    = aws_key_pair.bastion-ssh_key.key_name
+  iam_instance_profile        = aws_iam_instance_profile.instnc_profile.name
   tags = {
     Name = "bastion-host"
   }
+}
+
+### Add instance profile
+# Create an Iam Role
+resource "aws_iam_role" "ec2_bastion_role" {
+  name = "bastion_role"
+  path = "/"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
+}
+
+# Reference the full S3 access policy created during S3 bucket creation
+
+data "aws_iam_policy" "xmple_s3_full_access" {
+  name = "example-general_s3_all"
+}
+
+# Attach the iam policy to the IAM role
+
+resource "aws_iam_policy_attachment" "s3-read-only" {
+  name       = "s3-access-attach"
+  roles      = [aws_iam_role.ec2_bastion_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
+resource "aws_iam_policy_attachment" "s3-access-attach" {
+  name       = "s3-access-attach"
+  roles      = [aws_iam_role.ec2_bastion_role.name]
+  policy_arn = data.aws_iam_policy.xmple_s3_full_access.arn
+}
+
+# Instance profile with this role
+resource "aws_iam_instance_profile" "instnc_profile" {
+  name = "bastion_instnc_prfl"
+  role = aws_iam_role.ec2_bastion_role.name
 }

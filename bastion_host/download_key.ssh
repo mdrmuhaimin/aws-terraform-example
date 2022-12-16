@@ -2,4 +2,4 @@ aws s3 cp s3://xmple/terraform/output/ec2_instances/general/bastion-ssh_key.pem 
 # Add owner only permission to file (rw-------)
 chmod 600 bastion-ssh_key.pem
 # SSH to bastion-host
-ssh -i bastion-ssh_key.pem ec2-user@13.233.130.156
+ssh -i bastion-ssh_key.pem ec2-user@52.66.206.183

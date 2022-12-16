@@ -21,3 +21,15 @@ provider "aws" {
     }
   }
 }
+
+### Add VPC VPC
+resource "aws_vpc" "main" {
+  # Ref for subnet 
+  # https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html  
+  # Range 10.0.0.0 - 10.0.255.255
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "example-vpc"
+  }
+}
+

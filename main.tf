@@ -12,7 +12,7 @@ terraform {
 
 # Define AWS specific configurations
 provider "aws" {
-  region = "eu-west-1"
+  region = var.aws_region
 
   default_tags {
     tags = {

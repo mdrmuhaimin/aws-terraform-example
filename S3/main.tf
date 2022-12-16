@@ -52,3 +52,27 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sse_example-gener
     }
   }
 }
+
+resource "aws_iam_policy" "iam_policy_s3_access" {
+  name        = "example-general_s3_all"
+  path        = "/"
+  description = "Full access to example-general S3 bucket"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "s3:*",
+        ],
+        "Resource" : [
+          "${aws_s3_bucket.example-general.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+

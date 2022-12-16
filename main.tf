@@ -107,3 +107,15 @@ resource "aws_route_table" "route-table-this" {
     Name = "rt-main"
   }
 }
+
+### Route table subnet assoication 
+
+resource "aws_route_table_association" "public_a" {
+  subnet_id      = aws_subnet.primary_public.id
+  route_table_id = aws_route_table.route-table-this.id
+}
+
+resource "aws_route_table_association" "public_b" {
+  subnet_id      = aws_subnet.secondary_public.id
+  route_table_id = aws_route_table.route-table-this.id
+}

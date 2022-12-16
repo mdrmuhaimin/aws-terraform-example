@@ -78,3 +78,32 @@ resource "aws_subnet" "private_secondary" {
     Name = "private-b"
   }
 }
+
+### Create Internet Gateway
+
+resource "aws_internet_gateway" "igw-this" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "igw-main"
+  }
+}
+
+### Create Route Table
+resource "aws_route_table" "route-table-this" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw-this.id
+  }
+
+  route {
+    ipv6_cidr_block = "::/0"
+    gateway_id      = aws_internet_gateway.igw-this.id
+  }
+
+  tags = {
+    Name = "rt-main"
+  }
+}

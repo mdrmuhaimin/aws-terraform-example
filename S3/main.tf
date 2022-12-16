@@ -24,7 +24,8 @@ provider "aws" {
 ### Create S3 bucket
 
 resource "aws_s3_bucket" "example-general" {
-  bucket = var.example_bucket_name
+  force_destroy = true # Dangerous dont add it in prod bucket
+  bucket        = var.example_bucket_name
 }
 
 resource "aws_s3_bucket_public_access_block" "privatize_example-general" {
